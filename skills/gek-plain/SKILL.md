@@ -5,7 +5,7 @@ disable-model-invocation: true
 argument-hint: "[artifactId] [groupId] [Elternverzeichnis]"
 ---
 
-Erstellt ein neues Projekt aus dem committeten Stand (`HEAD`) des Templates `D:\dev-kah\ideaprojects\plain-project`. Nicht committete Änderungen am Template fließen nicht ein.
+Erstellt ein neues Projekt aus dem Template <https://github.com/devgek/plain-project> (Branch `main`). Lokale Änderungen am Template fließen erst ein, wenn sie gepusht sind.
 
 Argumente: $ARGUMENTS
 
@@ -24,7 +24,7 @@ Argumente: $ARGUMENTS
    bash ~/.claude/skills/gek-plain/new-project.sh <artifactId> <groupId> <Elternverzeichnis>
    ```
 
-   Das Skript kopiert das Template, verschiebt die Java-Packages, ersetzt alle Namen, entfernt die Template-Hinweise aus `README.md` und `pom.xml` und legt ein Git-Repo mit Initial-Commit an. Es bricht ab, wenn das Ziel schon existiert. Fertig, wenn es `TARGET=…` ausgibt.
+   Das Skript klont das Template ohne dessen Historie, verschiebt die Java-Packages, ersetzt alle Namen, entfernt die Template-Hinweise aus `README.md` und `pom.xml` und legt ein Git-Repo mit Initial-Commit an. Es bricht ab, wenn das Ziel schon existiert. Fertig, wenn es `TARGET=…` ausgibt.
 
 3. **Prüfen** im neuen Projekt:
    - `grep -rniE "plainproject|plain-project|PlainProject" --exclude-dir=.git .` liefert keine Treffer.

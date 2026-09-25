@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Erstellt aus dem committeten Stand (HEAD) von plain-project ein neues Projekt.
+# Erstellt aus dem Template plain-project (Branch main auf GitHub) ein neues Projekt.
 # Aufruf: new-project.sh <artifactId> [groupId] [Elternverzeichnis]
 set -euo pipefail
 
-TEMPLATE="${GEK_PLAIN_TEMPLATE:-/d/dev-kah/ideaprojects/plain-project}"
+TEMPLATE="${GEK_PLAIN_TEMPLATE:-https://github.com/devgek/plain-project.git}"   # URL oder lokaler Pfad eines Git-Repos
 ARTIFACT="${1:?artifactId fehlt, z. B. my-shop}"
 GROUP="${2:-com.kah}"
-PARENT="${3:-$(dirname "$TEMPLATE")}"
+PARENT="${3:-/d/dev-kah/ideaprojects}"
 
 [[ "$ARTIFACT" =~ ^[a-z][a-z0-9-]*[a-z0-9]$ ]] || { echo "artifactId muss kebab-case sein (a-z, 0-9, -): $ARTIFACT" >&2; exit 1; }
 [[ "$GROUP" =~ ^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)*$ ]] || { echo "groupId ungültig: $GROUP" >&2; exit 1; }
@@ -19,9 +19,10 @@ PACKAGE="$GROUP.$PKG_SEGMENT"                                   # com.kah.myshop
 PACKAGE_PATH="${PACKAGE//.//}"                                  # com/kah/myshop
 PASCAL="$(sed -E 's/(^|-)([a-z0-9])/\U\2/g' <<<"$ARTIFACT")"    # MyShop
 
-mkdir -p "$TARGET"
-git -C "$TEMPLATE" archive --format=tar HEAD | tar -x -C "$TARGET"
+# Nur der letzte Stand, ohne Historie des Templates
+git clone -q --depth 1 --branch main "$TEMPLATE" "$TARGET"
 cd "$TARGET"
+rm -rf .git
 
 # Java-Packages verschieben (main und test)
 for root in src/main/java src/test/java; do
